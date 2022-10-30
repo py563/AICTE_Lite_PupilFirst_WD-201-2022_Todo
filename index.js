@@ -44,14 +44,14 @@ const todoList = () => {
       let OUTPUT_STRING = ''
       list.forEach(element => {
         if (element.dueDate === today){
-          OUTPUT_STRING += `${element.completed ? '[x]':'[ ]'} ${element.title} \n`
+          OUTPUT_STRING += `${element.completed ? '[x]':'[ ]'} ${element.title}\n`
         }
         else {
-          OUTPUT_STRING += `${element.completed ? '[x]':'[ ]'} ${element.title} ${element.dueDate} \n`
+          OUTPUT_STRING += `${element.completed ? '[x]':'[ ]'} ${element.title} ${element.dueDate}\n`
         }
         //console.log(`${element.completed ? '[x]':'[ ]'} ${element.title}`)
       });
-      return OUTPUT_STRING
+      return OUTPUT_STRING.slice(0,-1)
     }
   
     return { all, add, markAsComplete, overdue, dueToday, dueLater, toDisplayableList };
