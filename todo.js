@@ -7,7 +7,7 @@ const todoList = () => {
     all[index].completed = true;
   };
 
-  let today = new Date().toLocaleDateString("en-CA");
+  const today = new Date().toLocaleDateString("en-CA");
 
   const overdue = () => {
     return all.filter((todoItem) => todoItem.dueDate < today);
@@ -33,7 +33,7 @@ const todoList = () => {
           element.title
         } ${element.dueDate}\n`;
       }
-      //console.log(`${element.completed ? '[x]':'[ ]'} ${element.title}`)
+      // console.log(`${element.completed ? '[x]':'[ ]'} ${element.title}`)
     });
     return OUTPUT_STRING.slice(0, -1);
   };
