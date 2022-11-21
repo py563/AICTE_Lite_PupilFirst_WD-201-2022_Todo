@@ -1,0 +1,23 @@
+{
+  "name": "aicte_lite_pupilfirst_wd-201-2022_todo",
+  "version": "1.0.0",
+  "description": "wd-201 assignments",
+  "main": "todo.js",
+  "dependencies": {
+    "jest": "^29.3.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/py563/AICTE_Lite_PupilFirst_WD-201-2022_Todo.git"
+  },
+  "author": "py563",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/py563/AICTE_Lite_PupilFirst_WD-201-2022_Todo/issues"
+  },
+  "homepage": "https://github.com/py563/AICTE_Lite_PupilFirst_WD-201-2022_Todo#readme"
+}
