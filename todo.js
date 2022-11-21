@@ -7,6 +7,8 @@ const todoList = () => {
     all[index].completed = true;
   };
 
+  let today = new Date().toLocaleDateString("en-CA");
+
   const overdue = () => {
     return all.filter((todoItem) => todoItem.dueDate < today);
   };
