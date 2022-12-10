@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, Op } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
     /**
@@ -18,31 +18,75 @@ module.exports = (sequelize, DataTypes) => {
 
       console.log("Overdue");
       // FILL IN HERE
+      const todos1 = await Todo.overdue();
+      const overDueList = todos1
+        .map((todo) => todo.displayableString())
+        .join("\n");
+      console.log(overDueList);
       console.log("\n");
 
       console.log("Due Today");
       // FILL IN HERE
+      const todos2 = await Todo.dueToday();
+      const dueTodayList = todos2
+        .map((todo) => todo.displayableString())
+        .join("\n");
+      console.log(dueTodayList);
+      console.log("\n");
       console.log("\n");
 
       console.log("Due Later");
       // FILL IN HERE
+      const todos3 = await Todo.dueLater();
+      const dueLaterList = todos3
+        .map((todo) => todo.displayableString())
+        .join("\n");
+      console.log(dueLaterList);
     }
 
     static async overdue() {
       // FILL IN HERE TO RETURN OVERDUE ITEMS
+      return await Todo.findAll({
+        where: {
+          dueDate: {
+            [Op.lt]: new Date().toLocaleDateString("en-CA"),
+          },
+        },
+      });
     }
 
     static async dueToday() {
       // FILL IN HERE TO RETURN ITEMS DUE tODAY
+      return await Todo.findAll({
+        where: {
+          dueDate: {
+            [Op.eq]: new Date().toLocaleDateString("en-CA"),
+          },
+        },
+      });
     }
 
     static async dueLater() {
       // FILL IN HERE TO RETURN ITEMS DUE LATER
+      return await Todo.findAll({
+        where: {
+          dueDate: {
+            [Op.gt]: new Date().toLocaleDateString("en-CA"),
+          },
+        },
+      });
     }
 
     static async markAsComplete(id) {
       // FILL IN HERE TO MARK AN ITEM AS COMPLETE
-
+      await Todo.update(
+        { completed: true },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
     }
 
     displayableString() {
