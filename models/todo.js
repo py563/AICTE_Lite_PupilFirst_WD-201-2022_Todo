@@ -13,34 +13,13 @@ module.exports = (sequelize, DataTypes) => {
     static async addTask(params) {
       return await Todo.create(params);
     }
-    static async showList() {
-      console.log("My Todo list \n");
 
-      console.log("Overdue");
-      // FILL IN HERE
-      const todos1 = await Todo.overdue();
-      const overDueList = todos1
-        .map((todo) => todo.displayableString())
-        .join("\n");
-      console.log(overDueList);
-      console.log("\n");
+    static addTodo({ title, dueDate }) {
+      return this.create({ title: title, dueDate: dueDate, completed: false });
+    }
 
-      console.log("Due Today");
-      // FILL IN HERE
-      const todos2 = await Todo.dueToday();
-      const dueTodayList = todos2
-        .map((todo) => todo.displayableString())
-        .join("\n");
-      console.log(dueTodayList);
-      console.log("\n");
-
-      console.log("Due Later");
-      // FILL IN HERE
-      const todos3 = await Todo.dueLater();
-      const dueLaterList = todos3
-        .map((todo) => todo.displayableString())
-        .join("\n");
-      console.log(dueLaterList);
+    markAsCompleted() {
+      return this.update({ completed: true });
     }
 
     static async overdue() {
@@ -76,26 +55,6 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static async markAsComplete(id) {
-      // FILL IN HERE TO MARK AN ITEM AS COMPLETE
-      await Todo.update(
-        { completed: true },
-        {
-          where: {
-            id: id,
-          },
-        }
-      );
-    }
-
-    displayableString() {
-      let checkbox = this.completed ? "[x]" : "[ ]";
-      return `${this.id}. ${checkbox} ${this.title}${
-        this.dueDate === new Date().toLocaleDateString("en-CA")
-          ? ""
-          : " " + this.dueDate
-      }`;
-    }
   }
   Todo.init(
     {
