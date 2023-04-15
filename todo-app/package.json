@@ -20,6 +20,7 @@
     "supertest": "^6.3.3"
   },
   "scripts": {
+    "start": "nodemon -e js,ejs",
     "pretest": "NODE_ENV=test npx sequelize-cli db:drop && NODE_ENV=test npx sequelize-cli db:create",
     "test": "NODE_ENV=test jest --detectOpenHandles",
     "prepare": "husky install"
@@ -31,7 +32,7 @@
     ]
   },
   "repository": {
-    "type": "git", 
+    "type": "git",
     "url": "git+https://github.com/py563/AICTE_Lite_PupilFirst_WD-201-2022_Todo.git"
   },
   "author": "py563",
