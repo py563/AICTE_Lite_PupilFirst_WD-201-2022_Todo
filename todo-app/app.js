@@ -7,17 +7,22 @@ app.use(bodyParser.json());
 
 app.set("view engine", "ejs");
 
-app.get("/", (request, response) => {
-  response.render("index");
+app.get("/", async (request, response) => {
+  const allTodos = await Todo.getAllTodos();
+  if (request.accepts("html")) {
+    response.render("index", { allTodos });
+  } else {
+    response.json({ allTodos });
+  }
 });
 
 app.get("/todos", async function (request, response) {
   console.log("Processing list of all Todos ...");
   // FILL IN YOUR CODE HERE
   try {
-  const todos = await Todo.findAll();
-  response.send(todos);
-  } catch (error){
+    const todos = await Todo.findAll();
+    response.send(todos);
+  } catch (error) {
     console.log(error);
     return response.status(422).json(error);
   }

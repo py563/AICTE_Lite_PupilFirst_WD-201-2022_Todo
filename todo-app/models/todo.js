@@ -55,7 +55,11 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+    static async getAllTodos() {
+      return await this.findAll();
+    }
   }
+
   Todo.init(
     {
       title: DataTypes.STRING,
