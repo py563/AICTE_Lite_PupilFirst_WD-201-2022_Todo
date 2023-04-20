@@ -1,0 +1,40 @@
+{
+  "name": "aicte_lite_pupilfirst_wd-201-2022_todo",
+  "version": "1.0.0",
+  "description": "wd-201 assignments",
+  "main": "todo.js",
+  "dependencies": {
+    "jest": "^29.3.1",
+    "minimist": "^1.2.7",
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.25.7"
+  },
+  "devDependencies": {
+    "eslint": "^8.28.0",
+    "eslint-config-google": "^0.14.0",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
+    "sequelize-cli": "^6.5.2"
+  },
+  "scripts": {
+    "test": "jest --detectOpenHandles"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "prettier --write ."
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/py563/AICTE_Lite_PupilFirst_WD-201-2022_Todo.git"
+  },
+  "author": "py563",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/py563/AICTE_Lite_PupilFirst_WD-201-2022_Todo/issues"
+  },
+  "homepage": "https://github.com/py563/AICTE_Lite_PupilFirst_WD-201-2022_Todo#readme"
+}
