@@ -1,0 +1,22 @@
+{
+  "name": "aicte_lite_pupilfirst_wd-201",
+  "version": "1.0.0",
+  "description": "assignments",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/py563/AICTE_Lite_PupilFirst_WD-201.git"
+  },
+  "author": "py563",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/py563/AICTE_Lite_PupilFirst_WD-201/issues"
+  },
+  "homepage": "https://github.com/py563/AICTE_Lite_PupilFirst_WD-201#readme",
+  "dependencies": {
+    "minimist": "^1.2.6"
+  }
+}
