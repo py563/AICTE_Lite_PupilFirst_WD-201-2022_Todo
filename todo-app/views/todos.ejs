@@ -1,14 +1,85 @@
-<table>
-  <tr>
-    <th>ID</th>
-    <th>Title</th>
-    <th>Due Date</th>
-  </tr>
-  <% for (let todo of allTodos) { %>
-  <tr>
-    <td><%= todo.id %></td>
-    <td><%= todo.title %></td>
-    <td><%= todo.dueDate %></td>
-  </tr>
-  <% } %>
-</table>
+<div>
+  <div class="flex">
+    <h5>Overdue</h5>
+    <span class="ml-2 text-sm px-2 py-1 bg-gray-200"
+      ><%=overdueTodos.length %></span
+    >
+  </div>
+
+  <ul class="list-none">
+    <% for (let todo of overdueTodos) { %>
+    <li>
+      <div
+        class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-aqua-50"
+      >
+        <input
+          id="todo-checkbox-<%= todo.id %>"
+          type="checkbox"
+          class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300"
+        />
+        <label
+          for="todo-checkbox-<%= todo.id %>"
+          class="ml-2 text-sm text-gray-600"
+          ><%= todo.title %></label
+        >
+      </div>
+    </li>
+    <% } %>
+  </ul>
+</div>
+<div>
+  <div class="flex">
+    <h5>Due Today</h5>
+    <span class="ml-2 text-sm px-2 py-1 bg-gray-200"
+      ><%=dueTodayTodos.length %></span
+    >
+  </div>
+  <ul class="list-none">
+    <% for (let todo of dueTodayTodos) { %>
+    <li>
+      <div
+        class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-aqua-50"
+      >
+        <input
+          id="todo-checkbox-<%= todo.id %>"
+          type="checkbox"
+          class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300"
+        />
+        <label
+          for="todo-checkbox-<%= todo.id %>"
+          class="ml-2 text-sm text-gray-600"
+          ><%= todo.title %></label
+        >
+      </div>
+    </li>
+    <% } %>
+  </ul>
+</div>
+<div>
+  <div class="flex">
+    <h5>Due Later</h5>
+    <span class="ml-2 text-sm px-2 py-1 bg-gray-200"
+      ><%=dueLaterTodos.length %></span
+    >
+  </div>
+  <ul class="list-none">
+    <% for (let todo of dueLaterTodos) { %>
+    <li>
+      <div
+        class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-aqua-50"
+      >
+        <input
+          id="todo-checkbox-<%= todo.id %>"
+          type="checkbox"
+          class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300"
+        />
+        <label
+          for="todo-checkbox-<%= todo.id %>"
+          class="ml-2 text-sm text-gray-600"
+          ><%= todo.title %></label
+        >
+      </div>
+    </li>
+    <% } %>
+  </ul>
+</div>
