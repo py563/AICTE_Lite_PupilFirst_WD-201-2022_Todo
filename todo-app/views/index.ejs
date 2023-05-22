@@ -56,7 +56,9 @@
           </div>
         </form>
       </div>
-      <div class="col-start-3 col-span-2"><%- include('todos') %></div>
+      <div class="col-start-3 col-span-2"><%- include('todos', {headingTitle:"Overdue", data:overdueTodos}) %></div>
+      <div class="col-start-3 col-span-2"><%- include('todos', {headingTitle:"Due Today", data:dueTodayTodos}) %></div>
+      <div class="col-start-3 col-span-2"><%- include('todos', {headingTitle:"Due Later", data:dueLaterTodos}) %></div>
       <div class="col-start-3 col-span-2"><%- include('footer') %></div>
     </div>
   </body>
