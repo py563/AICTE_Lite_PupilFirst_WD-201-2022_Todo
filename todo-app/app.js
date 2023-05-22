@@ -18,11 +18,13 @@ app.get("/", async (request, response) => {
   const overdueTodos = await Todo.overdue();
   const dueTodayTodos = await Todo.dueToday();
   const dueLaterTodos = await Todo.dueLater();
+  const completedTodos = await Todo.getCompletedTodos();
   if (request.accepts("html")) {
     response.render("index", {
       overdueTodos,
       dueTodayTodos,
       dueLaterTodos,
+      completedTodos,
       csrfToken: request.csrfToken(),
     });
   } else {

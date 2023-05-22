@@ -7,9 +7,7 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      // define association here
-    }
+
     static async addTask(params) {
       return await Todo.create(params);
     }
@@ -29,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.lt]: new Date().toLocaleDateString("en-CA"),
           },
+          completed: false,
         },
       });
     }
@@ -40,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.eq]: new Date().toLocaleDateString("en-CA"),
           },
+          completed: false,
         },
       });
     }
@@ -51,12 +51,17 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.gt]: new Date().toLocaleDateString("en-CA"),
           },
+          completed: false,
         },
       });
     }
 
-    static async getAllTodos() {
-      return await this.findAll();
+    static async getCompletedTodos() {
+      return await this.findAll({
+        where: {
+          completed: true,
+        },
+      });
     }
 
     static async remove(id) {
