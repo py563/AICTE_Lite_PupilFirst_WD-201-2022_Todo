@@ -14,7 +14,7 @@
       >
         <input
           id="todo-checkbox-<%= todo.id %>"
-          type="checkbox" <%= todo.completed ? "checked":"" %> onClick="toggleCompleted(<%= todo.id %>)"
+          type="checkbox" <%= todo.completed ? "checked":"" %> onclick="toggleCompleted(<%= todo.id %>)"
           class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300"
         />
         <label
@@ -22,7 +22,7 @@
           class="ml-2 text-sm text-gray-600"
           ><%= todo.title %></label
         >
-        <a href="#" class="ml-2 hidden trash-icon">
+        <a href="#" class="ml-2 hidden trash-icon" onclick="deleteTodo(<%=todo.id %>)">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

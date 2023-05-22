@@ -58,6 +58,14 @@ module.exports = (sequelize, DataTypes) => {
     static async getAllTodos() {
       return await this.findAll();
     }
+
+    static async remove(id) {
+      return await this.destroy({
+        where: {
+          id: id,
+        },
+      });
+    }
   }
 
   Todo.init(
