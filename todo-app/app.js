@@ -1,11 +1,15 @@
 /* eslint-disable no-unused-vars */
 const express = require("express");
 const app = express();
+const csrf = require("tiny-csrf");
 const { Todo } = require("./models");
 const bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
 const path = require("path");
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser("cookie-monster-secret"));
+app.use(csrf("0123456789iamthesecret9876543210", ["POST", "PUT", "DELETE"]));
 
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
@@ -15,7 +19,12 @@ app.get("/", async (request, response) => {
   const dueTodayTodos = await Todo.dueToday();
   const dueLaterTodos = await Todo.dueLater();
   if (request.accepts("html")) {
-    response.render("index", { overdueTodos, dueTodayTodos, dueLaterTodos });
+    response.render("index", {
+      overdueTodos,
+      dueTodayTodos,
+      dueLaterTodos,
+      csrfToken: request.csrfToken(),
+    });
   } else {
     response.json({ overdueTodos, dueTodayTodos, dueLaterTodos });
   }
