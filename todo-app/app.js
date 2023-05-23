@@ -74,7 +74,6 @@ app.post("/todos", async function (request, response) {
 app.put("/todos/:id/", async function (request, response) {
   const todo = await Todo.findByPk(request.params.id);
   try {
-    // console.log("We have to update a Todo with ID: ", request.params.id);
     const updatedTodo = await todo.setCompletionStatus(request.body.completed);
     return response.json(updatedTodo);
   } catch (error) {
@@ -84,10 +83,6 @@ app.put("/todos/:id/", async function (request, response) {
 });
 
 app.delete("/todos/:id", async function (request, response) {
-  console.log("We have to delete a Todo with ID: ", request.params.id);
-  // First, we have to query our database to delete a Todo by ID.
-  // Then, we have to respond back with true/false based on whether the Todo was deleted or not.
-  // response.send(true)
   try {
     Todo.remove(request.params.id);
     return response.json({ success: true });
