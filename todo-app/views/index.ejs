@@ -10,13 +10,15 @@
     <script>
       var token = document.querySelector('meta[name="csrfToken"]').getAttribute("content");
       function toggleCompleted(id) {
-        fetch(`/todos/${id}/markAsCompleted`, {
-          method: "PUT",
+        const todoStatus = document.querySelector(`#todo-checkbox-${id}`).checked;
+        fetch(`/todos/${id}/`, {
+          method: "put",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             _csrf: token,
+            completed: todoStatus,
           }),
         })
           .then((res) => {
@@ -83,7 +85,7 @@
       <div class="col-start-3 col-span-2"><%- include('todos', {headingTitle:"Overdue", data:overdueTodos}) %></div>
       <div class="col-start-3 col-span-2"><%- include('todos', {headingTitle:"Due Today", data:dueTodayTodos}) %></div>
       <div class="col-start-3 col-span-2"><%- include('todos', {headingTitle:"Due Later", data:dueLaterTodos}) %></div>
-      <div class="col-start-3 col-span-2"><%- include('todos', {headingTitle:"Completed", data:completedTodos}) %></div>
+      <div class="col-start-3 col-span-2"><%- include('todos', {headingTitle:"Completed Items", data:completedTodos}) %></div>
       <div class="col-start-3 col-span-2"><%- include('footer') %></div>
     </div>
   </body>

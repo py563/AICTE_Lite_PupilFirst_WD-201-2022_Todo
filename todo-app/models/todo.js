@@ -20,12 +20,16 @@ module.exports = (sequelize, DataTypes) => {
       return this.update({ completed: true });
     }
 
+    setCompletionStatus(status) {
+      return this.update({ completed: status });
+    }
+
     static async overdue() {
       // FILL IN HERE TO RETURN OVERDUE ITEMS
       return await Todo.findAll({
         where: {
           dueDate: {
-            [Op.lt]: new Date().toLocaleDateString("en-CA"),
+            [Op.lt]: new Date().toLocaleDateString("en-ca"),
           },
           completed: false,
         },
@@ -37,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       return await Todo.findAll({
         where: {
           dueDate: {
-            [Op.eq]: new Date().toLocaleDateString("en-CA"),
+            [Op.eq]: new Date().toLocaleDateString("en-ca"),
           },
           completed: false,
         },
@@ -49,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
       return await Todo.findAll({
         where: {
           dueDate: {
-            [Op.gt]: new Date().toLocaleDateString("en-CA"),
+            [Op.gt]: new Date().toLocaleDateString("en-ca"),
           },
           completed: false,
         },
