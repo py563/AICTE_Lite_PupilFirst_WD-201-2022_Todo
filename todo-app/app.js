@@ -6,47 +6,99 @@ const { Todo, User } = require("./models");
 const bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 const path = require("path");
+
+//user auth
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const session = require("express-session");
+const connectEnsureLogin = require("connect-ensure-login");
+
 app.use(bodyParser.json());
+
+app.set("view engine", "ejs");
+
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("cookie-monster-secret"));
 app.use(csrf("0123456789iamthesecret9876543210", ["POST", "PUT", "DELETE"]));
-
-app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/", async (request, response) => {
-  const overdueTodos = await Todo.overdue();
-  const dueTodayTodos = await Todo.dueToday();
-  const dueLaterTodos = await Todo.dueLater();
-  const completedTodos = await Todo.getCompletedTodos();
-  if (request.accepts("html")) {
-    response.render("index", {
-      overdueTodos,
-      dueTodayTodos,
-      dueLaterTodos,
-      completedTodos,
-      csrfToken: request.csrfToken(),
+// user auth
+app.use(
+  session({
+    secret: "my-secret-key-176172672",
+    cookie: { maxAge: 24 * 60 * 60000 },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: "emailAddress",
+      passwordField: "password",
+    },
+    (username, password, done) => {
+      console.log("Authenticating user: ", username);
+      User.findOne({ where: { email: username, password: password } })
+        .then((user) => {
+          return done(null, user);
+        })
+        .catch((error) => {
+          return error;
+        });
+    }
+  )
+);
+
+passport.serializeUser((user, done) => {
+  console.log("Serializing user: ", user);
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  User.findByPk(id)
+    .then((user) => {
+      done(null, user);
+    })
+    .catch((error) => {
+      done(error, null);
     });
-  } else {
-    response.json({ overdueTodos, dueTodayTodos, dueLaterTodos });
-  }
 });
 
-app.get("/todos", async function (request, response) {
-  console.log("Processing list of all Todos ...");
-  // FILL IN YOUR CODE HERE
-  try {
-    const todos = await Todo.findAll();
-    response.send(todos);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
-  }
-
-  // First, we have to query our PostgerSQL database using Sequelize to get list of all Todos.
-  // Then, we have to respond with all Todos, like:
-  // response.send(todos)
+app.get("/", async (request, response) => {
+  response.render("index", {
+    title: "Todo Application",
+    csrfToken: request.csrfToken(),
+  });
 });
+
+app.get(
+  "/todos",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    // First, we have to query our PostgerSQL database using Sequelize to get list of all Todos.
+    // Then, we have to respond with all Todos, like:
+    // response.send(todos)const overdueTodos = await Todo.overdue();
+    const overdueTodos = await Todo.overdue();
+    const dueTodayTodos = await Todo.dueToday();
+    const dueLaterTodos = await Todo.dueLater();
+    const completedTodos = await Todo.getCompletedTodos();
+    if (request.accepts("html")) {
+      response.render("todoHome", {
+        overdueTodos,
+        dueTodayTodos,
+        dueLaterTodos,
+        completedTodos,
+        csrfToken: request.csrfToken(),
+      });
+    } else {
+      response.json({ overdueTodos, dueTodayTodos, dueLaterTodos });
+    }
+  }
+);
 
 app.get("/todos/:id", async function (request, response) {
   try {
@@ -102,13 +154,18 @@ app.get("/signup", async function (request, response) {
 app.post("/users", async function (request, response) {
   try {
     console.log("Firstname: ", request.body.firstName);
-    const todoAppUser = User.create({
+    const todoAppUser = await User.create({
       firstName: request.body.firstName,
       lastName: request.body.lastName,
       email: request.body.emailAddress,
       password: request.body.password,
     });
-    response.redirect("/");
+    request.login(todoAppUser, (error) => {
+      if (error) {
+        return console.log(error);
+      }
+      response.redirect("/todos");
+    });
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
