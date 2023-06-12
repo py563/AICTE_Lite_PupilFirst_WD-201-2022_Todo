@@ -44,9 +44,14 @@ passport.use(
     },
     (username, password, done) => {
       console.log("Authenticating user: ", username);
-      User.findOne({ where: { email: username, password: password } })
-        .then((user) => {
-          return done(null, user);
+      User.findOne({ where: { email: username } })
+        .then(async (user) => {
+          const matchPassword = await bcrypt.compare(password, user.password);
+          if (matchPassword) {
+            return done(null, user);
+          } else {
+            return done("Incorrect password");
+          }
         })
         .catch((error) => {
           return error;
@@ -102,49 +107,67 @@ app.get(
   }
 );
 
-app.get("/todos/:id", async function (request, response) {
-  try {
+app.get(
+  "/todos/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    try {
+      const todo = await Todo.findByPk(request.params.id);
+      return response.json(todo);
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  }
+);
+
+app.post(
+  "/todos",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    try {
+      const todo = await Todo.addTodo({
+        title: request.body.title,
+        dueDate: request.body.dueDate,
+      });
+      return response.redirect("/todos");
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  }
+);
+
+app.put(
+  "/todos/:id/",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
     const todo = await Todo.findByPk(request.params.id);
-    return response.json(todo);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
+    try {
+      const updatedTodo = await todo.setCompletionStatus(
+        request.body.completed
+      );
+      return response.json(updatedTodo);
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
   }
-});
+);
 
-app.post("/todos", async function (request, response) {
-  try {
-    const todo = await Todo.addTodo({
-      title: request.body.title,
-      dueDate: request.body.dueDate,
-    });
-    return response.redirect("/");
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
+app.delete(
+  "/todos/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    try {
+      Todo.remove(request.params.id);
+      return response.json({ success: true });
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
   }
-});
-
-app.put("/todos/:id/", async function (request, response) {
-  const todo = await Todo.findByPk(request.params.id);
-  try {
-    const updatedTodo = await todo.setCompletionStatus(request.body.completed);
-    return response.json(updatedTodo);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
-  }
-});
-
-app.delete("/todos/:id", async function (request, response) {
-  try {
-    Todo.remove(request.params.id);
-    return response.json({ success: true });
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
-  }
-});
+);
 
 app.get("/signup", async function (request, response) {
   response.render("signup", {
@@ -173,6 +196,30 @@ app.post("/users", async function (request, response) {
     console.log(error);
     return response.status(422).json(error);
   }
+});
+
+app.get("/login", (request, response) => {
+  response.render("login", {
+    csrfToken: request.csrfToken(),
+    title: "Login",
+  });
+});
+
+app.post(
+  "/session",
+  passport.authenticate("local", { failureRedirect: "/login" }),
+  (request, response) => {
+    response.redirect("/todos");
+  }
+);
+
+app.get("/signout", (request, response, next) => {
+  request.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    response.redirect("/");
+  });
 });
 
 module.exports = app;
