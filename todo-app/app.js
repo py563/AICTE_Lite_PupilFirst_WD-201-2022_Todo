@@ -89,10 +89,11 @@ app.get(
     // First, we have to query our PostgerSQL database using Sequelize to get list of all Todos.
     // Then, we have to respond with all Todos, like:
     // response.send(todos)const overdueTodos = await Todo.overdue();
-    const overdueTodos = await Todo.overdue();
-    const dueTodayTodos = await Todo.dueToday();
-    const dueLaterTodos = await Todo.dueLater();
-    const completedTodos = await Todo.getCompletedTodos();
+    const loggedInUser = request.user;
+    const overdueTodos = await Todo.overdue(loggedInUser.id);
+    const dueTodayTodos = await Todo.dueToday(loggedInUser.id);
+    const dueLaterTodos = await Todo.dueLater(loggedInUser.id);
+    const completedTodos = await Todo.getCompletedTodos(loggedInUser.id);
     if (request.accepts("html")) {
       response.render("todoHome", {
         overdueTodos,
@@ -129,6 +130,7 @@ app.post(
       const todo = await Todo.addTodo({
         title: request.body.title,
         dueDate: request.body.dueDate,
+        userId: request.user.id,
       });
       return response.redirect("/todos");
     } catch (error) {
@@ -160,7 +162,7 @@ app.delete(
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
     try {
-      Todo.remove(request.params.id);
+      Todo.remove(request.params.id, request.user.id);
       return response.json({ success: true });
     } catch (error) {
       console.log(error);
