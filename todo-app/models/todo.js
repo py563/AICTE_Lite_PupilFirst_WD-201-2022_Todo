@@ -20,7 +20,12 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static addTodo({ title, dueDate, userId }) {
-      return this.create({ title: title, dueDate: dueDate, userId: userId, completed: false });
+      return this.create({
+        title: title,
+        dueDate: dueDate,
+        userId: userId,
+        completed: false,
+      });
     }
 
     markAsCompleted() {
@@ -79,7 +84,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static async remove(id,userId) {
+    static async remove(id, userId) {
       return await this.destroy({
         where: {
           id,

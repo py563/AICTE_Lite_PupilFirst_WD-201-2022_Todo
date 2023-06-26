@@ -15,7 +15,7 @@ const login = async (agent, username, password) => {
     emailAddress: username,
     password: password,
     _csrf: csrfToken,
-  }); 
+  });
 };
 
 describe("Todo Application", function () {
@@ -34,7 +34,7 @@ describe("Todo Application", function () {
     }
   });
 
-  test("Create a user or Sign-up User", async() => {
+  test("Create a user or Sign-up User", async () => {
     const res = await agent.get("/signup");
     const csrfToken = extractCsrfToken(res);
     const response = await agent.post("/users").send({
@@ -58,7 +58,7 @@ describe("Todo Application", function () {
 
   test("Creates a todo and responds with json at /todos POST endpoint", async () => {
     const agent = request.agent(server);
-    await login(agent,"spider@man.com","hashedPassword");
+    await login(agent, "spider@man.com", "hashedPassword");
     const res = await agent.get("/todos");
     const csrfToken = extractCsrfToken(res);
     const response = await agent.post("/todos").send({
@@ -70,10 +70,10 @@ describe("Todo Application", function () {
     expect(response.statusCode).toBe(302);
     expect(response.headers.location).toBe("/todos");
   });
-  
+
   test("Marks a todo with the given ID as complete", async () => {
     const agent = request.agent(server);
-    await login(agent,"spider@man.com","hashedPassword");
+    await login(agent, "spider@man.com", "hashedPassword");
     let res = await agent.get("/todos");
     let csrfToken = extractCsrfToken(res);
 
@@ -83,7 +83,9 @@ describe("Todo Application", function () {
       completed: false,
       _csrf: csrfToken,
     });
-    const groupedTodos = await agent.get("/todos").set("Accept", "application/json");
+    const groupedTodos = await agent
+      .get("/todos")
+      .set("Accept", "application/json");
     const parsedGroupedTodos = JSON.parse(groupedTodos.text);
     const dueTodayTodosCount = parsedGroupedTodos.dueTodayTodos.length;
     const latestTodo = parsedGroupedTodos.dueTodayTodos[dueTodayTodosCount - 1];
@@ -104,7 +106,7 @@ describe("Todo Application", function () {
 
   test("Marks a todo with the given ID as incomplete", async () => {
     const agent = request.agent(server);
-    await login(agent,"spider@man.com","hashedPassword");
+    await login(agent, "spider@man.com", "hashedPassword");
     let res = await agent.get("/todos");
     let csrfToken = extractCsrfToken(res);
 
@@ -114,7 +116,9 @@ describe("Todo Application", function () {
       completed: false,
       _csrf: csrfToken,
     });
-    const groupedTodos = await agent.get("/todos").set("Accept", "application/json");
+    const groupedTodos = await agent
+      .get("/todos")
+      .set("Accept", "application/json");
     const parsedGroupedTodos = JSON.parse(groupedTodos.text);
     const dueTodayTodosCount = parsedGroupedTodos.dueTodayTodos.length;
     const latestTodo = parsedGroupedTodos.dueTodayTodos[dueTodayTodosCount - 1];
@@ -146,7 +150,7 @@ describe("Todo Application", function () {
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
     // FILL IN YOUR CODE HERE
     const agent = request.agent(server);
-    await login(agent,"spider@man.com","hashedPassword");
+    await login(agent, "spider@man.com", "hashedPassword");
     let res = await agent.get("/todos");
     let csrfToken = extractCsrfToken(res);
 
@@ -157,7 +161,9 @@ describe("Todo Application", function () {
       _csrf: csrfToken,
     });
 
-    const groupedTodos = await agent.get("/todos").set("Accept", "application/json");
+    const groupedTodos = await agent
+      .get("/todos")
+      .set("Accept", "application/json");
     const parsedGroupedTodos = JSON.parse(groupedTodos.text);
     const dueTodayTodosCount = parsedGroupedTodos.dueTodayTodos.length;
     const latestTodo = parsedGroupedTodos.dueTodayTodos[dueTodayTodosCount - 1];
@@ -174,5 +180,4 @@ describe("Todo Application", function () {
 
     expect(parsedDeleteTodoResponse.success).toBe(true);
   });
-
 });

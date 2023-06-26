@@ -11,6 +11,7 @@ const path = require("path");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const session = require("express-session");
+const flash = require("connect-flash");
 const connectEnsureLogin = require("connect-ensure-login");
 const bcrypt = require("bcrypt");
 
@@ -18,7 +19,9 @@ const saltRounds = 10;
 app.use(bodyParser.json());
 
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
+app.use(flash());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("cookie-monster-secret"));
@@ -32,6 +35,11 @@ app.use(
     cookie: { maxAge: 24 * 60 * 60000 },
   })
 );
+
+app.use(function (request, response, next) {
+  response.locals.messages = request.flash();
+  next();
+});
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -50,11 +58,13 @@ passport.use(
           if (matchPassword) {
             return done(null, user);
           } else {
-            return done("Incorrect password");
+            return done(null, false, { message: "Invalid Password" });
           }
         })
         .catch((error) => {
-          return error;
+          return done(null, false, {
+            message: "Not a Valid User, Please Signup",
+          });
         });
     }
   )
@@ -209,7 +219,10 @@ app.get("/login", (request, response) => {
 
 app.post(
   "/session",
-  passport.authenticate("local", { failureRedirect: "/login" }),
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+    failureFlash: true,
+  }),
   (request, response) => {
     response.redirect("/todos");
   }
