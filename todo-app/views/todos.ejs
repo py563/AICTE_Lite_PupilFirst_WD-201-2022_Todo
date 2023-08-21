@@ -12,17 +12,20 @@
       <div
         class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-aqua-50"
       >
-        <input
-          id="todo-checkbox-<%= todo.id %>"
-          type="checkbox" <%= todo.completed ? "checked":"" %> onclick="toggleCompleted(<%= todo.id %>)"
-          class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300"
+        <input id="todo-checkbox-<%= todo.id %>" type="checkbox" <%=
+        todo.completed ? "checked":"" %> onclick="toggleCompleted(<%= todo.id
+        %>)" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300"
         />
         <label
           for="todo-checkbox-<%= todo.id %>"
           class="ml-2 text-sm text-gray-600"
           ><%= todo.title %></label
         >
-        <a href="#" class="ml-2 hidden trash-icon" onclick="deleteTodo(<%=todo.id %>)">
+        <a
+          href="#"
+          class="ml-2 hidden trash-icon"
+          onclick="deleteTodo(<%=todo.id %>)"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

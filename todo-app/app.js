@@ -14,6 +14,7 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const connectEnsureLogin = require("connect-ensure-login");
 const bcrypt = require("bcrypt");
+const { ValidationError } = require("sequelize");
 
 const saltRounds = 10;
 app.use(bodyParser.json());
@@ -144,7 +145,14 @@ app.post(
       });
       return response.redirect("/todos");
     } catch (error) {
-      console.log(error);
+      if (
+        error.name === "SequelizeValidationError" &&
+        error.message.includes("len")
+      ) {
+        request.flash("error", "Title must be at least 5 characters long");
+        return response.redirect("/todos");
+      }
+      // console.log(error);
       return response.status(422).json(error);
     }
   }
