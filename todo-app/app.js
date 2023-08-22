@@ -106,7 +106,7 @@ app.get(
     const dueLaterTodos = await Todo.dueLater(loggedInUser.id);
     const completedTodos = await Todo.getCompletedTodos(loggedInUser.id);
     if (request.accepts("html")) {
-      response.render("todoHome", {
+      response.render("todo", {
         overdueTodos,
         dueTodayTodos,
         dueLaterTodos,
