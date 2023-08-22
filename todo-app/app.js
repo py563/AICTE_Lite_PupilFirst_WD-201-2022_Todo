@@ -199,6 +199,14 @@ app.get("/signup", async function (request, response) {
 app.post("/users", async function (request, response) {
   try {
     console.log("Firstname: ", request.body.firstName);
+    // First Name Validation Check
+    if (request.body.firstName.length < 2 || request.body.lastName.length < 2) {
+      request.flash(
+        "error",
+        "First Name and Last Name must be at least 2 characters long"
+      );
+      return response.redirect("/signup");
+    }
     const hashedPassword = await bcrypt.hash(request.body.password, 10);
     const todoAppUser = await User.create({
       firstName: request.body.firstName,
