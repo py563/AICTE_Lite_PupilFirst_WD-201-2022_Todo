@@ -48,7 +48,7 @@ app.use(passport.session());
 passport.use(
   new LocalStrategy(
     {
-      usernameField: "emailAddress",
+      usernameField: "email",
       passwordField: "password",
     },
     (username, password, done) => {
@@ -200,6 +200,11 @@ app.post("/users", async function (request, response) {
   try {
     console.log("Firstname: ", request.body.firstName);
     // First Name Validation Check
+    if (request.body.firstName.length < 2) {
+      request.flash("error", "First Name must be at least 2 characters long");
+      return response.redirect("/signup");
+    }
+    /* First Name and Last Name must be at least 2 characters long 
     if (request.body.firstName.length < 2 || request.body.lastName.length < 2) {
       request.flash(
         "error",
@@ -207,11 +212,12 @@ app.post("/users", async function (request, response) {
       );
       return response.redirect("/signup");
     }
+    */
     const hashedPassword = await bcrypt.hash(request.body.password, 10);
     const todoAppUser = await User.create({
       firstName: request.body.firstName,
       lastName: request.body.lastName,
-      email: request.body.emailAddress,
+      email: request.body.email,
       password: hashedPassword,
     });
     request.login(todoAppUser, (error) => {
@@ -221,6 +227,13 @@ app.post("/users", async function (request, response) {
       response.redirect("/todos");
     });
   } catch (error) {
+    if (error.name === "SequelizeUniqueConstraintError") {
+      request.flash(
+        "error",
+        "Email already exists, Please login or signup with a different email"
+      );
+      return response.redirect("/signup");
+    }
     console.log(error);
     return response.status(422).json(error);
   }

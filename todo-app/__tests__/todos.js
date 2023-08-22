@@ -12,7 +12,7 @@ const login = async (agent, username, password) => {
   let res = await agent.get("/login");
   let csrfToken = extractCsrfToken(res);
   res = await agent.post("/session").send({
-    emailAddress: username,
+    email: username,
     password: password,
     _csrf: csrfToken,
   });
@@ -40,7 +40,7 @@ describe("Todo Application", function () {
     const response = await agent.post("/users").send({
       firstName: "peter",
       lastName: "parker",
-      emailAddress: "spider@man.com",
+      email: "spider@man.com",
       password: "hashedPassword",
       _csrf: csrfToken,
     });

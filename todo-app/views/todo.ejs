@@ -101,17 +101,20 @@
         </form>
       </div>
       <div class="col-start-3 col-span-2">
-        <%- include('todos', {headingTitle:"Overdue", data:overdueTodos}) %>
+        <%- include('todos', {headingTitle:"Overdue", countName:"count-overdue",
+        data:overdueTodos}) %>
       </div>
       <div class="col-start-3 col-span-2">
-        <%- include('todos', {headingTitle:"Due Today", data:dueTodayTodos}) %>
+        <%- include('todos', {headingTitle:"Due Today",
+        countName:"count-due-today", data:dueTodayTodos}) %>
       </div>
       <div class="col-start-3 col-span-2">
-        <%- include('todos', {headingTitle:"Due Later", data:dueLaterTodos}) %>
+        <%- include('todos', {headingTitle:"Due Later",
+        countName:"count-due-later", data:dueLaterTodos}) %>
       </div>
       <div class="col-start-3 col-span-2">
         <%- include('todos', {headingTitle:"Completed Items",
-        data:completedTodos}) %>
+        countName:"count-completed", data:completedTodos}) %>
       </div>
       <div class="col-start-3 col-span-2"><%- include('footer') %></div>
     </div>
