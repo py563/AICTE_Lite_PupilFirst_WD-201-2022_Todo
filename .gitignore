@@ -102,3 +102,7 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Cypress VTA test files
+todo-app/cypress/
+todo-app/cypress.config.js
